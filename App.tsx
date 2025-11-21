@@ -49,7 +49,7 @@ const Layout: React.FC<{
         navigate('/refund');
         break;
       case 'admin':
-        navigate('/admin');
+        navigate('/crm');
         break;
       default:
         navigate('/');
@@ -202,7 +202,7 @@ const AdminLoginPage: React.FC<{
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (adminUser === 'aavoadmin' && adminPass === 'qazwsx./@1') {
+    if (adminUser === 'aavoadmin' && adminPass === 'aavo@2024') {
       onLogin();
     } else {
       alert('Invalid Username or Password');
@@ -290,7 +290,7 @@ const TitleUpdater: React.FC<{ lang: Language }> = ({ lang }) => {
       title = lang === 'en' ? "Terms of Service | AAVO Wholesale Foods" : "利用規約 | AAVO 業務用食品卸";
     } else if (pathname === '/refund') {
       title = lang === 'en' ? "Refund Policy | AAVO Wholesale Foods" : "返金ポリシー | AAVO 業務用食品卸";
-    } else if (pathname === '/qazwsx./@1') {
+    } else if (pathname === '/crm') {
       title = "AAVO CRM | Admin Dashboard";
     }
 
@@ -313,7 +313,7 @@ const App: React.FC = () => {
         <Routes>
           {/* Admin Route - No Header/Footer */}
           <Route
-            path="/admin"
+            path="/crm"
             element={
               <AdminPage
                 isLoggedIn={isAdminLoggedIn}
