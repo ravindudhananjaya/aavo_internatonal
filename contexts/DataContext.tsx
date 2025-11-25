@@ -1,69 +1,135 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Product, DataContextType } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../constants';
+import { db } from '../firebase';
+import { collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
-const STORAGE_KEY_PRODUCTS = 'aavo_products_v1';
-const STORAGE_KEY_CATALOG = 'aavo_catalog_url_v1';
-const STORAGE_KEY_LOGO = 'aavo_logo_url_v1';
-
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  // Initialize products from LocalStorage or fallback to constants
-  const [products, setProducts] = useState<Product[]>(() => {
-    const saved = localStorage.getItem(STORAGE_KEY_PRODUCTS);
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
-  });
+  const [products, setProducts] = useState<Product[]>([]);
+  const [catalogUrl, setCatalogUrl] = useState<string>('');
+  const [logoUrl, setLogoUrl] = useState<string>('');
+  const [loading, setLoading] = useState(true);
 
-  // Initialize Catalog URL
-  const [catalogUrl, setCatalogUrl] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_CATALOG) || '';
-  });
-
-  // Initialize Logo URL
-  const [logoUrl, setLogoUrl] = useState<string>(() => {
-    return localStorage.getItem(STORAGE_KEY_LOGO) || '';
-  });
-
-  // Save to LocalStorage whenever changes occur
+  // Subscribe to Products
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_PRODUCTS, JSON.stringify(products));
-  }, [products]);
+    const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+      const productsData: Product[] = [];
+      snapshot.forEach((doc) => {
+        productsData.push(doc.data() as Product);
+      });
 
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_CATALOG, catalogUrl);
-  }, [catalogUrl]);
-
-  useEffect(() => {
-    localStorage.setItem(STORAGE_KEY_LOGO, logoUrl);
-  }, [logoUrl]);
-
-  const addProduct = (product: Product) => {
-    setProducts([...products, product]);
-  };
-
-  const updateProduct = (updatedProduct: Product) => {
-    setProducts(products.map(p => p.id === updatedProduct.id ? updatedProduct : p));
-  };
-
-  const deleteProduct = (id: string) => {
-    setProducts(products.filter(p => p.id !== id));
-  };
-
-  const updateCatalogUrl = (url: string) => {
-    setCatalogUrl(url);
-  };
-
-  const updateLogoUrl = (url: string) => {
-    setLogoUrl(url);
-  };
-
-  const resetData = () => {
-    if (window.confirm("Are you sure? This will factory reset all product data to the original defaults.")) {
+      // If empty, seed initial data
+      if (productsData.length === 0 && !snapshot.metadata.fromCache) {
+        seedInitialData();
+      } else {
+        setProducts(productsData);
+      }
+      setLoading(false);
+    }, (error) => {
+      console.error("Error fetching products:", error);
+      // Fallback to initial products if DB fails (e.g. missing config)
       setProducts(INITIAL_PRODUCTS);
-      setCatalogUrl('');
-      localStorage.removeItem(STORAGE_KEY_PRODUCTS);
-      localStorage.removeItem(STORAGE_KEY_CATALOG);
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  // Subscribe to Settings (Catalog & Logo)
+  useEffect(() => {
+    const unsubscribe = onSnapshot(doc(db, "settings", "general"), (doc) => {
+      if (doc.exists()) {
+        const data = doc.data();
+        setCatalogUrl(data.catalogUrl || '');
+        setLogoUrl(data.logoUrl || '');
+      }
+    }, (error) => {
+      console.error("Error fetching settings:", error);
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+  const seedInitialData = async () => {
+    try {
+      const batch = writeBatch(db);
+      INITIAL_PRODUCTS.forEach(product => {
+        const docRef = doc(db, "products", product.id);
+        batch.set(docRef, product);
+      });
+      await batch.commit();
+      console.log("Initial data seeded");
+    } catch (e) {
+      console.error("Error seeding data: ", e);
+    }
+  };
+
+  const addProduct = async (product: Product) => {
+    try {
+      await setDoc(doc(db, "products", product.id), product);
+    } catch (e) {
+      console.error("Error adding product: ", e);
+      alert("Failed to add product. Check console for details.");
+    }
+  };
+
+  const updateProduct = async (updatedProduct: Product) => {
+    try {
+      await setDoc(doc(db, "products", updatedProduct.id), updatedProduct);
+    } catch (e) {
+      console.error("Error updating product: ", e);
+      alert("Failed to update product. Check console for details.");
+    }
+  };
+
+  const deleteProduct = async (id: string) => {
+    try {
+      await deleteDoc(doc(db, "products", id));
+    } catch (e) {
+      console.error("Error deleting product: ", e);
+      alert("Failed to delete product. Check console for details.");
+    }
+  };
+
+  const updateCatalogUrl = async (url: string) => {
+    try {
+      await setDoc(doc(db, "settings", "general"), { catalogUrl: url }, { merge: true });
+    } catch (e) {
+      console.error("Error updating catalog URL: ", e);
+    }
+  };
+
+  const updateLogoUrl = async (url: string) => {
+    try {
+      await setDoc(doc(db, "settings", "general"), { logoUrl: url }, { merge: true });
+    } catch (e) {
+      console.error("Error updating logo URL: ", e);
+    }
+  };
+
+  const resetData = async () => {
+    if (window.confirm("Are you sure? This will delete all products in the database and restore defaults.")) {
+      try {
+        // Delete all existing products
+        const querySnapshot = await getDocs(collection(db, "products"));
+        const batch = writeBatch(db);
+        querySnapshot.forEach((doc) => {
+          batch.delete(doc.ref);
+        });
+        await batch.commit();
+
+        // Reseed
+        await seedInitialData();
+
+        // Reset settings
+        await setDoc(doc(db, "settings", "general"), { catalogUrl: '', logoUrl: '' });
+
+      } catch (e) {
+        console.error("Error resetting data: ", e);
+        alert("Failed to reset data.");
+      }
     }
   };
 
