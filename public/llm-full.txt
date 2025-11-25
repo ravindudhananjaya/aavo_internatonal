@@ -1,0 +1,59 @@
+# AAVO International - Full Agent Context
+
+## Company Profile
+**Name**: Aavo International
+**Head Office**: 167 Uchiyamacho, Hanamigawa Ward, Chiba City, Chiba Prefecture 262-0002
+**Established**: 2024/04/31
+**Contact**: 043-301-5294 | aavointernational.com.jp@gmail.com
+
+## Mission
+To bridge the gap between authentic Asian producers and the Japanese market, providing high-quality, halal-certified meats and essential groceries to restaurants and retailers.
+
+## Website Structure & Routes
+
+### Main Pages
+- **Home (`/`)**: Introduction, Featured Products, Call to Actions.
+- **About (`/about`)**: Company story, mission, and corporate profile.
+- **Categories (`/categories`)**: Visual grid of product categories (Meat, Rice, Spices, etc.).
+- **All Products (`/products`)**: Comprehensive list of all available products.
+- **Catalog (`/catalog`)**: Gate for downloading the full wholesale price list (requires simple form).
+- **Contact (`/contact`)**: Contact form and direct contact details (WhatsApp, Viber).
+
+### Legal Pages
+- **Privacy Policy (`/privacy`)**: Data collection and usage.
+- **Terms of Service (`/terms`)**: Usage agreement for wholesale accounts.
+- **Refund Policy (`/refund`)**: Returns only for defective/incorrect items (perishable goods).
+
+## Product Categories (Detailed)
+
+### 1. Meat Products (Halal)
+- **Items**: Goat Meat (Skin-on/Skin-off), Mutton, Chicken.
+- **Specs**: Frozen -18°C, Vacuum Packed.
+- **Origin**: Australia, Domestic (Japan).
+
+### 2. Basmati Rice
+- **Items**: India Gate Classic, Daawat Chef's Secret.
+- **Specs**: 1121 XXL Grain, Aged 12+ months.
+- **Origin**: India, Pakistan.
+
+### 3. Spices & Masalas
+- **Items**: Green Cardamom, Cumin Seeds, MDH Masala Mixes.
+- **Specs**: Whole and Ground, Export Quality.
+
+### 4. Daal & Beans
+- **Items**: Toor Dal, Chickpeas (Kabuli), Yellow Moong Dal.
+- **Specs**: Sortex Cleaned, 1kg/5kg/25kg bags.
+
+### 5. Noodles & Instant
+- **Items**: Wai Wai Noodles, Rara Noodles.
+- **Origin**: Nepal, Southeast Asia.
+
+## Operational Details
+- **Minimum Order**: Generally 30kg for frozen goods (shipping efficiency).
+- **Shipping**: Nationwide in Japan via Refrigerated Transport.
+- **Wholesale Accounts**: Available for businesses; verification required.
+
+## Technical Context
+- **Stack**: React, Vite, Tailwind CSS, Firebase (Firestore).
+- **Data**: Products are stored in Firestore and synced to the client.
+- **CRM**: Admin dashboard available at `/crm` for managing inventory.

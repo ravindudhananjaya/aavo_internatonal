@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS, COMPANY_PHONE } from '../constants';
 import { useData } from '../contexts/DataContext';
 import { ArrowLeft, MessageCircle, Thermometer, MapPin, ShieldCheck, Package } from 'lucide-react';
+import SEO from './SEO';
 
 interface SingleProductDetailProps {
   lang: Language;
@@ -20,17 +21,6 @@ const SingleProductDetail: React.FC<SingleProductDetailProps> = ({ lang, categor
   const category = products.find(p => p.id === categoryId);
   const product = category?.subProducts?.[productIndex];
 
-  // Update SEO title
-  useEffect(() => {
-    if (product && category) {
-      const prevTitle = document.title;
-      document.title = `${product.name[lang]} | ${category.name[lang]} | AAVO Wholesale Foods`;
-      return () => {
-        document.title = prevTitle;
-      };
-    }
-  }, [lang, product, category]);
-
   if (!category || !product) {
     return <div className="pt-32 text-white text-center">Product not found</div>;
   }
@@ -44,6 +34,13 @@ const SingleProductDetail: React.FC<SingleProductDetailProps> = ({ lang, categor
 
   return (
     <div className="pt-24 pb-20 bg-aavo-dark animate-fade-in">
+      <SEO
+        title={`${product.name[lang]} | ${category.name[lang]}`}
+        description={category.description[lang]}
+        image={product.image}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url={`https://aavointernational.com/products/${categoryId}/${productIndex}`}
+      />
       <div className="container mx-auto px-4">
         {/* Back Button */}
         <button

@@ -18,7 +18,8 @@ export const TRANSLATIONS: Record<'en' | 'jp', ContentStrings> = {
     nav: {
       home: "Home",
       about: "About Us",
-      products: "Categories",
+      categories: "Categories",
+      products: "All Products",
       catalog: "Catalog",
       contact: "Contact",
     },
@@ -189,7 +190,8 @@ export const TRANSLATIONS: Record<'en' | 'jp', ContentStrings> = {
     nav: {
       home: "ホーム",
       about: "私たちについて",
-      products: "商品一覧",
+      categories: "商品カテゴリー",
+      products: "全商品一覧",
       catalog: "カタログ",
       contact: "お問い合わせ",
     },
@@ -447,7 +449,7 @@ export const PRODUCTS: Product[] = [
       { label: { en: 'Packaging', jp: '包装' }, value: { en: '1kg / 5kg / 25kg', jp: '1kg / 5kg / 25kg' } }
     ],
     subProducts: [
-      { name: { en: 'Toor Dal', jp: 'トゥールダール' }, image: 'https://images.unsplash.com/photo-1585996323540-c78fa3831087?q=80&w=500&auto=format&fit=crop' }, 
+      { name: { en: 'Toor Dal', jp: 'トゥールダール' }, image: 'https://images.unsplash.com/photo-1585996323540-c78fa3831087?q=80&w=500&auto=format&fit=crop' },
       { name: { en: 'Chickpeas (Kabuli)', jp: 'ひよこ豆' }, image: 'https://images.unsplash.com/photo-1587486913049-53fc88a55219?q=80&w=500&auto=format&fit=crop' },
       { name: { en: 'Yellow Moong Dal', jp: 'イエロームングダール' }, image: 'https://images.unsplash.com/photo-1515543904379-3d757afe726e?q=80&w=500&auto=format&fit=crop' }
     ]

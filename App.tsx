@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, useParams, useLocation } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { Language } from './types';
 import { DataProvider } from './contexts/DataContext';
 import Header from './components/Header';
@@ -8,11 +9,13 @@ import About from './components/About';
 import Contact from './components/Contact';
 import Catalog from './components/Catalog';
 import ProductShowcase from './components/ProductShowcase';
+import Categories from './components/Categories';
 import ProductDetail from './components/ProductDetail';
 import SingleProductDetail from './components/SingleProductDetail';
 import Legal from './components/Legal';
 import Footer from './components/Footer';
 import AdminDashboard from './components/admin/AdminDashboard';
+import SEO from './components/SEO';
 
 // Layout component that includes Header and Footer
 const Layout: React.FC<{
@@ -93,7 +96,15 @@ const HomePage: React.FC<{ lang: Language }> = ({ lang }) => {
     }
     window.scrollTo(0, 0);
   };
-  return <Home lang={lang} onNavigate={handleNavigate} />;
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "AAVO Wholesale Foods" : "AAVO 業務用食品卸"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+      />
+      <Home lang={lang} onNavigate={handleNavigate} />
+    </>
+  );
 };
 
 const AboutPage: React.FC<{ lang: Language }> = ({ lang }) => {
@@ -108,7 +119,17 @@ const AboutPage: React.FC<{ lang: Language }> = ({ lang }) => {
     }
     window.scrollTo(0, 0);
   };
-  return <About lang={lang} onNavigate={handleNavigate} />;
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "About Us" : "会社概要"}
+        description={lang === 'en' ? "Learn about AAVO International's mission to bring authentic Asian flavors to Japan." : "AAVOインターナショナルのミッションと会社概要について。"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url="https://aavointernational.com/about"
+      />
+      <About lang={lang} onNavigate={handleNavigate} />
+    </>
+  );
 };
 
 const ProductsPage: React.FC<{ lang: Language }> = ({ lang }) => {
@@ -127,7 +148,46 @@ const ProductsPage: React.FC<{ lang: Language }> = ({ lang }) => {
     navigate(`/products/${id}`);
     window.scrollTo(0, 0);
   };
-  return <ProductShowcase lang={lang} onProductSelect={handleProductSelect} onNavigate={handleNavigate} />;
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "All Products" : "全商品一覧"}
+        description={lang === 'en' ? "Browse our full range of wholesale Asian ingredients including Halal meats, rice, and spices." : "ハラール肉、米、スパイスなど、厳選されたアジア食材の全商品一覧。"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url="https://aavointernational.com/products"
+      />
+      <ProductShowcase lang={lang} onProductSelect={handleProductSelect} onNavigate={handleNavigate} />
+    </>
+  );
+};
+
+const CategoriesPage: React.FC<{ lang: Language }> = ({ lang }) => {
+  const navigate = useNavigate();
+  const handleNavigate = (sectionId: string) => {
+    switch (sectionId) {
+      case 'contact':
+        navigate('/contact');
+        break;
+      default:
+        navigate('/');
+    }
+    window.scrollTo(0, 0);
+  };
+  const handleProductSelect = (id: string) => {
+    navigate(`/products/${id}`);
+    window.scrollTo(0, 0);
+  };
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "Categories" : "商品カテゴリー"}
+        description={lang === 'en' ? "Explore our product categories: Meat, Rice, Spices, and more." : "肉類、米、スパイスなど、カテゴリーから商品を探す。"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url="https://aavointernational.com/categories"
+      />
+      <Categories lang={lang} onProductSelect={handleProductSelect} onNavigate={handleNavigate} />
+    </>
+  );
 };
 
 const ProductDetailPage: React.FC<{ lang: Language }> = ({ lang }) => {
@@ -176,11 +236,31 @@ const SingleProductDetailPage: React.FC<{ lang: Language }> = ({ lang }) => {
 };
 
 const ContactPage: React.FC<{ lang: Language }> = ({ lang }) => {
-  return <Contact lang={lang} />;
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "Contact Us" : "お問い合わせ"}
+        description={lang === 'en' ? "Get in touch with AAVO International for wholesale inquiries." : "AAVOインターナショナルへのお問い合わせはこちら。"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url="https://aavointernational.com/contact"
+      />
+      <Contact lang={lang} />
+    </>
+  );
 };
 
 const CatalogPage: React.FC<{ lang: Language }> = ({ lang }) => {
-  return <Catalog lang={lang} />;
+  return (
+    <>
+      <SEO
+        title={lang === 'en' ? "Wholesale Catalog" : "卸売カタログ"}
+        description={lang === 'en' ? "Download our latest wholesale catalog." : "最新の卸売カタログをダウンロード。"}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url="https://aavointernational.com/catalog"
+      />
+      <Catalog lang={lang} />
+    </>
+  );
 };
 
 const LegalPage: React.FC<{ lang: Language; type: 'privacy' | 'terms' | 'refund' }> = ({ lang, type }) => {
@@ -189,7 +269,22 @@ const LegalPage: React.FC<{ lang: Language; type: 'privacy' | 'terms' | 'refund'
     navigate('/');
     window.scrollTo(0, 0);
   };
-  return <Legal lang={lang} type={type} onBack={handleBack} />;
+
+  let title = "Legal";
+  if (type === 'privacy') title = lang === 'en' ? "Privacy Policy" : "プライバシーポリシー";
+  if (type === 'terms') title = lang === 'en' ? "Terms of Service" : "利用規約";
+  if (type === 'refund') title = lang === 'en' ? "Refund Policy" : "返金ポリシー";
+
+  return (
+    <>
+      <SEO
+        title={title}
+        lang={lang === 'en' ? 'en' : 'jp'}
+        url={`https://aavointernational.com/${type}`}
+      />
+      <Legal lang={lang} type={type} onBack={handleBack} />
+    </>
+  );
 };
 
 // Admin Login Page
@@ -211,6 +306,7 @@ const AdminLoginPage: React.FC<{
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#1a1819]">
+      <SEO title="CRM Login" />
       <div className="bg-[#2A2A2A] p-8 rounded-lg border border-white/10 shadow-2xl max-w-sm w-full">
         <h2 className="text-white font-header text-2xl mb-6 text-center">CRM Login</h2>
         <form onSubmit={handleAdminLogin} className="space-y-4">
@@ -253,7 +349,12 @@ const AdminPage: React.FC<{
     return <AdminLoginPage onLogin={onLogin} />;
   }
 
-  return <AdminDashboard onLogout={handleLogout} />;
+  return (
+    <>
+      <SEO title="Admin Dashboard" />
+      <AdminDashboard onLogout={handleLogout} />
+    </>
+  );
 };
 
 // Scroll to top on route change
@@ -267,132 +368,105 @@ const ScrollToTop: React.FC = () => {
   return null;
 };
 
-// Title updater component
-const TitleUpdater: React.FC<{ lang: Language }> = ({ lang }) => {
-  const { pathname } = useLocation();
-
-  useEffect(() => {
-    let title = lang === 'en'
-      ? "AAVO Wholesale Foods | Asian Grocery & Spice Importer"
-      : "AAVO 業務用食品卸 | アジア食品・スパイス輸入";
-
-    if (pathname === '/about') {
-      title = lang === 'en' ? "About Us | AAVO Wholesale Foods" : "会社概要 | AAVO 業務用食品卸";
-    } else if (pathname === '/products' || pathname.startsWith('/products/')) {
-      title = lang === 'en' ? "Product Categories | AAVO Wholesale Foods" : "商品カテゴリー | AAVO 業務用食品卸";
-    } else if (pathname === '/contact') {
-      title = lang === 'en' ? "Contact Us | AAVO Wholesale Foods" : "お問い合わせ | AAVO 業務用食品卸";
-    } else if (pathname === '/catalog') {
-      title = lang === 'en' ? "Wholesale Catalog | AAVO Wholesale Foods" : "卸売カタログ | AAVO 業務用食品卸";
-    } else if (pathname === '/privacy') {
-      title = lang === 'en' ? "Privacy Policy | AAVO Wholesale Foods" : "プライバシーポリシー | AAVO 業務用食品卸";
-    } else if (pathname === '/terms') {
-      title = lang === 'en' ? "Terms of Service | AAVO Wholesale Foods" : "利用規約 | AAVO 業務用食品卸";
-    } else if (pathname === '/refund') {
-      title = lang === 'en' ? "Refund Policy | AAVO Wholesale Foods" : "返金ポリシー | AAVO 業務用食品卸";
-    } else if (pathname === '/crm') {
-      title = "AAVO CRM | Admin Dashboard";
-    }
-
-    document.title = title;
-    document.documentElement.lang = lang === 'en' ? 'en' : 'ja';
-  }, [lang, pathname]);
-
-  return null;
-};
-
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('en');
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
   return (
-    <DataProvider>
-      <BrowserRouter>
-        <ScrollToTop />
-        <TitleUpdater lang={lang} />
-        <Routes>
-          {/* Admin Route - No Header/Footer */}
-          <Route
-            path="/crm"
-            element={
-              <AdminPage
-                isLoggedIn={isAdminLoggedIn}
-                onLogin={() => setIsAdminLoggedIn(true)}
-                onLogout={() => setIsAdminLoggedIn(false)}
-              />
-            }
-          />
+    <HelmetProvider>
+      <DataProvider>
+        <BrowserRouter>
+          <ScrollToTop />
+          <Routes>
+            {/* Admin Route - No Header/Footer */}
+            <Route
+              path="/crm"
+              element={
+                <AdminPage
+                  isLoggedIn={isAdminLoggedIn}
+                  onLogin={() => setIsAdminLoggedIn(true)}
+                  onLogout={() => setIsAdminLoggedIn(false)}
+                />
+              }
+            />
 
-          {/* Public Routes with Header/Footer */}
-          <Route path="/" element={
-            <Layout lang={lang} setLang={setLang}>
-              <HomePage lang={lang} />
-            </Layout>
-          } />
+            {/* Public Routes with Header/Footer */}
+            <Route path="/" element={
+              <Layout lang={lang} setLang={setLang}>
+                <HomePage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/about" element={
-            <Layout lang={lang} setLang={setLang}>
-              <AboutPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/about" element={
+              <Layout lang={lang} setLang={setLang}>
+                <AboutPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/products" element={
-            <Layout lang={lang} setLang={setLang}>
-              <ProductsPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/products" element={
+              <Layout lang={lang} setLang={setLang}>
+                <ProductsPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/products/:productId" element={
-            <Layout lang={lang} setLang={setLang}>
-              <ProductDetailPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/categories" element={
+              <Layout lang={lang} setLang={setLang}>
+                <CategoriesPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/products/:categoryId/:productIndex" element={
-            <Layout lang={lang} setLang={setLang}>
-              <SingleProductDetailPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/products/:productId" element={
+              <Layout lang={lang} setLang={setLang}>
+                <ProductDetailPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/contact" element={
-            <Layout lang={lang} setLang={setLang}>
-              <ContactPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/products/:categoryId/:productIndex" element={
+              <Layout lang={lang} setLang={setLang}>
+                <SingleProductDetailPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/catalog" element={
-            <Layout lang={lang} setLang={setLang}>
-              <CatalogPage lang={lang} />
-            </Layout>
-          } />
+            <Route path="/contact" element={
+              <Layout lang={lang} setLang={setLang}>
+                <ContactPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/privacy" element={
-            <Layout lang={lang} setLang={setLang}>
-              <LegalPage lang={lang} type="privacy" />
-            </Layout>
-          } />
+            <Route path="/catalog" element={
+              <Layout lang={lang} setLang={setLang}>
+                <CatalogPage lang={lang} />
+              </Layout>
+            } />
 
-          <Route path="/terms" element={
-            <Layout lang={lang} setLang={setLang}>
-              <LegalPage lang={lang} type="terms" />
-            </Layout>
-          } />
+            <Route path="/privacy" element={
+              <Layout lang={lang} setLang={setLang}>
+                <LegalPage lang={lang} type="privacy" />
+              </Layout>
+            } />
 
-          <Route path="/refund" element={
-            <Layout lang={lang} setLang={setLang}>
-              <LegalPage lang={lang} type="refund" />
-            </Layout>
-          } />
+            <Route path="/terms" element={
+              <Layout lang={lang} setLang={setLang}>
+                <LegalPage lang={lang} type="terms" />
+              </Layout>
+            } />
 
-          {/* Catch-all route - redirect to home */}
-          <Route path="*" element={
-            <Layout lang={lang} setLang={setLang}>
-              <HomePage lang={lang} />
-            </Layout>
-          } />
-        </Routes>
-      </BrowserRouter>
-    </DataProvider>
+            <Route path="/refund" element={
+              <Layout lang={lang} setLang={setLang}>
+                <LegalPage lang={lang} type="refund" />
+              </Layout>
+            } />
+
+            {/* Catch-all route - redirect to home */}
+            <Route path="*" element={
+              <Layout lang={lang} setLang={setLang}>
+                <HomePage lang={lang} />
+              </Layout>
+            } />
+          </Routes>
+        </BrowserRouter>
+      </DataProvider>
+    </HelmetProvider>
   );
 };
 

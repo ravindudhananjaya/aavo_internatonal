@@ -4,6 +4,7 @@ export interface ContentStrings {
   nav: {
     home: string;
     about: string;
+    categories: string;
     products: string;
     catalog: string;
     contact: string;
@@ -153,9 +154,9 @@ export interface Product {
     grade?: string;
     temp: { en: string; jp: string };
   };
-  longSpecs?: { 
-    label: { en: string; jp: string }; 
-    value: { en: string; jp: string }; 
+  longSpecs?: {
+    label: { en: string; jp: string };
+    value: { en: string; jp: string };
   }[];
   subProducts?: SubProduct[];
 }

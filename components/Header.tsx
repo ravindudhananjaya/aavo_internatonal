@@ -58,8 +58,8 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
   return (
     <header
       className={`fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent ${isScrolled
-          ? 'bg-zinc-900/95 backdrop-blur-md border-white/10 py-3 shadow-lg'
-          : 'bg-gradient-to-b from-black/80 to-transparent py-6'
+        ? 'bg-zinc-900/95 backdrop-blur-md border-white/10 py-3 shadow-lg'
+        : 'bg-gradient-to-b from-black/80 to-transparent py-6'
         }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
@@ -72,6 +72,9 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
           </Link>
           <Link to="/about" className={navLinkClass('/about')}>
             {t.nav.about}
+          </Link>
+          <Link to="/categories" className={navLinkClass('/categories')}>
+            {t.nav.categories}
           </Link>
           <Link to="/products" className={navLinkClass('/products')}>
             {t.nav.products}
@@ -114,6 +117,9 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
           </Link>
           <Link to="/about" onClick={handleMobileNavClick} className={mobileNavLinkClass('/about')}>
             {t.nav.about}
+          </Link>
+          <Link to="/categories" onClick={handleMobileNavClick} className={mobileNavLinkClass('/categories')}>
+            {t.nav.categories}
           </Link>
           <Link to="/products" onClick={handleMobileNavClick} className={mobileNavLinkClass('/products')}>
             {t.nav.products}
