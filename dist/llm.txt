@@ -1,0 +1,27 @@
+# AAVO International - Agent Context (Concise)
+
+## Overview
+AAVO International is a premier wholesale food distributor in Japan, specializing in authentic Asian ingredients. We connect international producers with local restaurants and retailers.
+
+## Core Offerings
+- **Halal Meats**: Premium Goat, Mutton, Chicken (Frozen/Fresh).
+- **Rice & Grains**: Basmati (1121 XXL), Jasmine Rice, various lentils (Daal).
+- **Spices**: Whole and ground spices (Cardamom, Cumin, Masalas).
+- **Essentials**: Instant noodles (Wai Wai), beverages, and dry goods.
+
+## Key Information
+- **Target Audience**: Restaurants, Grocery Stores, Wholesalers in Japan.
+- **Delivery**: Nationwide shipping (Cool Takkyubin for frozen goods).
+- **Location**: Chiba City, Chiba Prefecture.
+
+## Navigation Structure
+- `/`: Home (Overview, Featured Products)
+- `/about`: Company Profile, Mission
+- `/categories`: Browse Product Categories
+- `/products`: Full Product List
+- `/catalog`: Download Wholesale Catalog (PDF)
+- `/contact`: Inquiry Form, Contact Info
+
+## Contact
+- **Phone/WhatsApp**: +81-80-7975-5742
+- **Email**: aavointernational.com.jp@gmail.com

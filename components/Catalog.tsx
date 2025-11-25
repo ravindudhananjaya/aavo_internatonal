@@ -5,6 +5,7 @@ import { useData } from '../contexts/DataContext';
 import { Lock, Download, CheckCircle, FileText, Package, Star, TrendingUp, Headphones } from 'lucide-react';
 import { db } from '../firebase';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 // Loading Spinner Component
 const Spinner = () => (
@@ -21,6 +22,7 @@ interface CatalogProps {
 const Catalog: React.FC<CatalogProps> = ({ lang }) => {
     const [isUnlocked, setIsUnlocked] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
     const t = TRANSLATIONS[lang];
     const c = t.catalog;
     const { catalogUrl } = useData();
@@ -38,6 +40,12 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!captchaToken) {
+            alert(lang === 'en' ? 'Please complete the reCAPTCHA verification.' : 'reCAPTCHA認証を完了してください。');
+            return;
+        }
+
         setIsLoading(true);
 
         try {
@@ -157,6 +165,15 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
                                                 </>
                                             )}
                                         </button>
+
+                                        <div className="flex justify-center mt-6">
+                                            <ReCAPTCHA
+                                                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                                                onChange={(token) => setCaptchaToken(token)}
+                                                theme="dark"
+                                            />
+                                        </div>
+
                                         <p className="text-center text-xs text-aavo-silver/50 mt-4">
                                             * Your information is secure and used only for verification.
                                         </p>

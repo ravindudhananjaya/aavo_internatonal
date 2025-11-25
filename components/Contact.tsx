@@ -1,4 +1,3 @@
-```javascript
 import React, { useState, useRef } from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS, COMPANY_PHONE, INQUIRY_PHONE, CONTACT_EMAIL, FACEBOOK_URL, TIKTOK_URL, WHATSAPP_URL, VIBER_URL } from '../constants';
@@ -29,7 +28,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!captchaToken) {
       alert(lang === 'en' ? 'Please complete the reCAPTCHA verification.' : 'reCAPTCHA認証を完了してください。');
       return;
@@ -92,7 +91,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
-            className={`font - header text - 4xl md: text - 6xl text - white mb - 4 ${ lang === 'jp' ? 'font-jp' : '' } `}
+            className={`font - header text - 4xl md: text - 6xl text - white mb - 4 ${lang === 'jp' ? 'font-jp' : ''} `}
           >
             {c.title}
           </motion.h1>
@@ -106,7 +105,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className={`mt - 6 text - aavo - silver max - w - 2xl text - lg ${ lang === 'jp' ? 'font-jp' : '' } `}
+            className={`mt - 6 text - aavo - silver max - w - 2xl text - lg ${lang === 'jp' ? 'font-jp' : ''} `}
           >
             {c.subtitle}
           </motion.p>
@@ -123,7 +122,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
             className="space-y-8"
           >
             <div className="bg-[#2A2A2A] p-8 rounded-lg border border-white/5 shadow-xl hover:border-aavo-green/30 transition-all">
-              <h3 className={`text - white font - header text - xl mb - 6 border - b border - white / 10 pb - 2 ${ lang === 'jp' ? 'font-jp' : '' } `}>
+              <h3 className={`text - white font - header text - xl mb - 6 border - b border - white / 10 pb - 2 ${lang === 'jp' ? 'font-jp' : ''} `}>
                 {lang === 'en' ? 'Information' : '基本情報'}
               </h3>
 
@@ -134,7 +133,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   </div>
                   <div>
                     <span className="block text-aavo-silver text-xs uppercase tracking-wider mb-1">{c.info.office}</span>
-                    <p className={`text - white text - lg ${ lang === 'jp' ? 'font-jp' : '' } `}>
+                    <p className={`text - white text - lg ${lang === 'jp' ? 'font-jp' : ''} `}>
                       {t.footer.address}
                     </p>
                   </div>
@@ -150,7 +149,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                       <a href={WHATSAPP_URL} className="text-white text-lg hover:text-aavo-green transition-colors block">
                         +81 80 7975 5742 (WhatsApp/Viber)
                       </a>
-                      <a href={`tel:${ INQUIRY_PHONE.replace(/-/g, '') } `} className="text-white text-lg hover:text-aavo-green transition-colors block">
+                      <a href={`tel:${INQUIRY_PHONE.replace(/-/g, '')} `} className="text-white text-lg hover:text-aavo-green transition-colors block">
                         {INQUIRY_PHONE} (Call)
                       </a>
                     </div>
@@ -163,7 +162,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   </div>
                   <div>
                     <span className="block text-aavo-silver text-xs uppercase tracking-wider mb-1">{c.info.email}</span>
-                    <a href={`mailto:${ CONTACT_EMAIL } `} className="text-white text-lg hover:text-aavo-green transition-colors block break-all">
+                    <a href={`mailto:${CONTACT_EMAIL} `} className="text-white text-lg hover:text-aavo-green transition-colors block break-all">
                       {CONTACT_EMAIL}
                     </a>
                   </div>
@@ -175,7 +174,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   </div>
                   <div>
                     <span className="block text-aavo-silver text-xs uppercase tracking-wider mb-1">{c.info.hours}</span>
-                    <p className={`text - white text - lg ${ lang === 'jp' ? 'font-jp' : '' } `}>
+                    <p className={`text - white text - lg ${lang === 'jp' ? 'font-jp' : ''} `}>
                       08:00 - 18:00
                     </p>
                   </div>
@@ -239,7 +238,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   <div className="w-20 h-20 bg-aavo-green/20 rounded-full flex items-center justify-center mb-6">
                     <CheckCircle size={40} className="text-aavo-green" />
                   </div>
-                  <h3 className={`text - 2xl text - white font - header mb - 2 ${ lang === 'jp' ? 'font-jp' : '' } `}>
+                  <h3 className={`text - 2xl text - white font - header mb - 2 ${lang === 'jp' ? 'font-jp' : ''} `}>
                     {lang === 'en' ? 'Message Sent!' : '送信完了'}
                   </h3>
                   <p className="text-aavo-silver">{c.form.success}</p>
@@ -252,34 +251,34 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                 </motion.div>
               ) : (
                 <form ref={form} onSubmit={handleSubmit} className="space-y-6">
-                  <h3 className={`text - white font - header text - 2xl mb - 8 ${ lang === 'jp' ? 'font-jp' : '' } `}>
+                  <h3 className={`text - white font - header text - 2xl mb - 8 ${lang === 'jp' ? 'font-jp' : ''} `}>
                     {lang === 'en' ? 'Send us a Message' : 'メッセージを送る'}
                   </h3>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className={`block text - aavo - silver text - sm ${ lang === 'jp' ? 'font-jp' : '' } `}>{c.form.name}</label>
+                      <label className={`block text - aavo - silver text - sm ${lang === 'jp' ? 'font-jp' : ''} `}>{c.form.name}</label>
                       <input type="text" name="name" required className="w-full bg-black/40 border border-white/10 rounded p-3 text-white focus:border-aavo-green focus:outline-none focus:bg-black/60 transition-all" />
                     </div>
                     <div className="space-y-2">
-                      <label className={`block text - aavo - silver text - sm ${ lang === 'jp' ? 'font-jp' : '' } `}>{c.form.company}</label>
+                      <label className={`block text - aavo - silver text - sm ${lang === 'jp' ? 'font-jp' : ''} `}>{c.form.company}</label>
                       <input type="text" name="company" className="w-full bg-black/40 border border-white/10 rounded p-3 text-white focus:border-aavo-green focus:outline-none focus:bg-black/60 transition-all" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className={`block text - aavo - silver text - sm ${ lang === 'jp' ? 'font-jp' : '' } `}>{c.form.email}</label>
+                      <label className={`block text - aavo - silver text - sm ${lang === 'jp' ? 'font-jp' : ''} `}>{c.form.email}</label>
                       <input type="email" name="email" required className="w-full bg-black/40 border border-white/10 rounded p-3 text-white focus:border-aavo-green focus:outline-none focus:bg-black/60 transition-all" />
                     </div>
                     <div className="space-y-2">
-                      <label className={`block text - aavo - silver text - sm ${ lang === 'jp' ? 'font-jp' : '' } `}>{c.form.phone}</label>
+                      <label className={`block text - aavo - silver text - sm ${lang === 'jp' ? 'font-jp' : ''} `}>{c.form.phone}</label>
                       <input type="tel" name="phone" className="w-full bg-black/40 border border-white/10 rounded p-3 text-white focus:border-aavo-green focus:outline-none focus:bg-black/60 transition-all" />
                     </div>
                   </div>
 
                   <div className="space-y-2">
-                    <label className={`block text - aavo - silver text - sm ${ lang === 'jp' ? 'font-jp' : '' } `}>{c.form.message}</label>
+                    <label className={`block text - aavo - silver text - sm ${lang === 'jp' ? 'font-jp' : ''} `}>{c.form.message}</label>
                     <textarea name="message" required rows={5} className="w-full bg-black/40 border border-white/10 rounded p-3 text-white focus:border-aavo-green focus:outline-none focus:bg-black/60 transition-all resize-none"></textarea>
                   </div>
 
@@ -294,7 +293,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   <button
                     type="submit"
                     disabled={isSubmitting || !captchaToken}
-                    className={`w - full bg - aavo - green text - aavo - dark font - bold font - header py - 4 rounded - sm hover: bg - white transition - all duration - 300 uppercase tracking - wider shadow - lg shadow - aavo - green / 10 flex items - center justify - center gap - 3 ${ isSubmitting || !captchaToken ? 'opacity-50 cursor-not-allowed' : '' } `}
+                    className={`w - full bg - aavo - green text - aavo - dark font - bold font - header py - 4 rounded - sm hover: bg - white transition - all duration - 300 uppercase tracking - wider shadow - lg shadow - aavo - green / 10 flex items - center justify - center gap - 3 ${isSubmitting || !captchaToken ? 'opacity-50 cursor-not-allowed' : ''} `}
                   >
                     {isSubmitting ? (
                       <>
