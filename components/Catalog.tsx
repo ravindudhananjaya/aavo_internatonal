@@ -41,7 +41,10 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (!captchaToken) {
+        // Only require reCAPTCHA if the site key is configured
+        const recaptchaEnabled = import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key';
+
+        if (recaptchaEnabled && !captchaToken) {
             alert(lang === 'en' ? 'Please complete the reCAPTCHA verification.' : 'reCAPTCHA認証を完了してください。');
             return;
         }
@@ -167,11 +170,13 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
                                         </button>
 
                                         <div className="flex justify-center mt-6">
-                                            <ReCAPTCHA
-                                                sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                                                onChange={(token) => setCaptchaToken(token)}
-                                                theme="dark"
-                                            />
+                                            {import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && (
+                                                <ReCAPTCHA
+                                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                                                    onChange={(token) => setCaptchaToken(token)}
+                                                    theme="dark"
+                                                />
+                                            )}
                                         </div>
 
                                         <p className="text-center text-xs text-aavo-silver/50 mt-4">

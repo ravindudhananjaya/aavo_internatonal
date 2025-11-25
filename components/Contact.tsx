@@ -29,7 +29,10 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!captchaToken) {
+    // Only require reCAPTCHA if the site key is configured
+    const recaptchaEnabled = import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key';
+
+    if (recaptchaEnabled && !captchaToken) {
       alert(lang === 'en' ? 'Please complete the reCAPTCHA verification.' : 'reCAPTCHA認証を完了してください。');
       return;
     }
@@ -283,17 +286,19 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
                   </div>
 
                   <div className="flex justify-center">
-                    <ReCAPTCHA
-                      sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                      onChange={(token) => setCaptchaToken(token)}
-                      theme="dark"
-                    />
+                    {import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && (
+                      <ReCAPTCHA
+                        sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                        onChange={(token) => setCaptchaToken(token)}
+                        theme="dark"
+                      />
+                    )}
                   </div>
 
                   <button
                     type="submit"
-                    disabled={isSubmitting || !captchaToken}
-                    className={`w - full bg - aavo - green text - aavo - dark font - bold font - header py - 4 rounded - sm hover: bg - white transition - all duration - 300 uppercase tracking - wider shadow - lg shadow - aavo - green / 10 flex items - center justify - center gap - 3 ${isSubmitting || !captchaToken ? 'opacity-50 cursor-not-allowed' : ''} `}
+                    disabled={isSubmitting || (import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && !captchaToken)}
+                    className={`w-full bg-aavo-green text-aavo-dark font-bold font-header py-4 rounded-sm hover:bg-white transition-all duration-300 uppercase tracking-wider shadow-lg shadow-aavo-green/10 flex items-center justify-center gap-3 ${isSubmitting || (import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && !captchaToken) ? 'opacity-50 cursor-not-allowed' : ''}`}
                   >
                     {isSubmitting ? (
                       <>
