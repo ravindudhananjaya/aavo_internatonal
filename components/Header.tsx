@@ -44,56 +44,23 @@ const Header: React.FC<HeaderProps> = ({ lang, setLang }) => {
       {logoUrl ? (
         <img src={logoUrl} alt="AAVO Wholesale Foods" className="h-12 w-auto object-contain" />
       ) : (
-        <>
-          {/* Logo Icon SVG */}
-          <svg width="42" height="42" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-aavo-green transition-transform duration-300 group-hover:scale-105 shrink-0">
-            {/* Outer Container */}
-            <rect x="5" y="5" width="90" height="90" rx="26" stroke="currentColor" strokeWidth="8" />
-
-            {/* Top Left Triangle (A) */}
-            <path d="M20 44 L33 20 L46 44" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-
-            {/* Top Right Triangle (A) */}
-            <path d="M54 44 L67 20 L80 44" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-
-            {/* Bottom Left V */}
-            <path d="M20 56 L33 80 L46 56" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-
-            {/* Bottom Right O */}
-            <circle cx="67" cy="68" r="12" stroke="currentColor" strokeWidth="7" />
-          </svg>
-
-          {/* Text SVG */}
-          <svg height="24" viewBox="0 0 260 50" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white group-hover:text-aavo-green transition-colors duration-300 hidden sm:block mt-1">
-            {/* A */}
-            <path d="M10 45 L35 5 L60 45" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-            {/* A */}
-            <path d="M75 45 L100 5 L125 45" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-            {/* V */}
-            <path d="M140 5 L165 45 L190 5" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round"/>
-            {/* O */}
-            <rect x="210" y="5" width="45" height="40" rx="20" stroke="currentColor" strokeWidth="8" />
-          </svg>
-        </>
+        <img src="/logo.png" alt="AAVO Wholesale Foods" className="h-12 w-auto object-contain" />
       )}
     </Link>
   );
 
-  const navLinkClass = (path: string) => `font-body text-sm font-medium transition-colors uppercase tracking-wider drop-shadow-md ${
-    isActive(path) ? 'text-aavo-green' : 'text-white hover:text-aavo-green'
-  }`;
+  const navLinkClass = (path: string) => `font-body text-sm font-medium transition-colors uppercase tracking-wider drop-shadow-md ${isActive(path) ? 'text-aavo-green' : 'text-white hover:text-aavo-green'
+    }`;
 
-  const mobileNavLinkClass = (path: string) => `block py-3 text-center font-header text-lg border-b border-white/5 ${
-    isActive(path) ? 'text-aavo-green' : 'text-white hover:text-aavo-green'
-  }`;
+  const mobileNavLinkClass = (path: string) => `block py-3 text-center font-header text-lg border-b border-white/5 ${isActive(path) ? 'text-aavo-green' : 'text-white hover:text-aavo-green'
+    }`;
 
   return (
     <header
-      className={`fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent ${
-        isScrolled
+      className={`fixed top-0 w-full z-50 transition-all duration-300 border-b border-transparent ${isScrolled
           ? 'bg-zinc-900/95 backdrop-blur-md border-white/10 py-3 shadow-lg'
           : 'bg-gradient-to-b from-black/80 to-transparent py-6'
-      }`}
+        }`}
     >
       <div className="container mx-auto px-4 md:px-6 flex justify-between items-center">
         <Logo />

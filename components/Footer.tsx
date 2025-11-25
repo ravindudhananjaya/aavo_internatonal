@@ -23,17 +23,7 @@ const Footer: React.FC<FooterProps> = ({ lang }) => {
               {logoUrl ? (
                 <img src={logoUrl} alt="AAVO Wholesale Foods" className="h-16 w-auto object-contain" />
               ) : (
-                <div className="flex items-center gap-3">
-                  {/* Logo Icon SVG */}
-                  <svg width="48" height="48" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-aavo-green">
-                    <rect x="5" y="5" width="90" height="90" rx="26" stroke="currentColor" strokeWidth="8" />
-                    <path d="M20 44 L33 20 L46 44" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M54 44 L67 20 L80 44" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-                    <path d="M20 56 L33 80 L46 56" stroke="currentColor" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round"/>
-                    <circle cx="67" cy="68" r="12" stroke="currentColor" strokeWidth="7" />
-                  </svg>
-                  <span className="font-header text-2xl text-white tracking-wide">AAVO</span>
-                </div>
+                <img src="/logo.png" alt="AAVO Wholesale Foods" className="h-16 w-auto object-contain" />
               )}
             </Link>
             <p className={`text-aavo-silver font-body leading-relaxed mb-6 ${lang === 'jp' ? 'font-jp' : ''}`}>
@@ -82,7 +72,7 @@ const Footer: React.FC<FooterProps> = ({ lang }) => {
 
           {/* Legal & Keywords */}
           <div>
-             <h3 className={`font-header text-lg text-aavo-green mb-6 ${lang === 'jp' ? 'font-jp' : ''}`}>
+            <h3 className={`font-header text-lg text-aavo-green mb-6 ${lang === 'jp' ? 'font-jp' : ''}`}>
               {lang === 'en' ? 'Information & Legal' : '情報・規約'}
             </h3>
             <ul className="space-y-3 font-body text-white mb-6">
