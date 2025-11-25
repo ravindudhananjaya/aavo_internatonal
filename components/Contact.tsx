@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Language } from '../types';
 import { TRANSLATIONS, COMPANY_PHONE, INQUIRY_PHONE, CONTACT_EMAIL, FACEBOOK_URL, TIKTOK_URL, WHATSAPP_URL, VIBER_URL } from '../constants';
-import { MapPin, Phone, Mail, Clock, Share2, CheckCircle } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Share2, CheckCircle, Send } from 'lucide-react';
 import { motion } from 'framer-motion';
 import emailjs from '@emailjs/browser';
 import ReCAPTCHA from 'react-google-recaptcha';
