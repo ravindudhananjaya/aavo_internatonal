@@ -15,6 +15,7 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   // Subscribe to Products
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, "products"), (snapshot) => {
+      console.log("Firestore update received. Docs count:", snapshot.size);
       const productsData: Product[] = [];
       snapshot.forEach((doc) => {
         productsData.push(doc.data() as Product);
@@ -22,13 +23,16 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       // If empty, seed initial data
       if (productsData.length === 0 && !snapshot.metadata.fromCache) {
+        console.log("Database empty, seeding initial data...");
         seedInitialData();
       } else {
+        console.log("Updating products state with", productsData.length, "items");
         setProducts(productsData);
       }
       setLoading(false);
     }, (error) => {
       console.error("Error fetching products:", error);
+      alert("Error connecting to database: " + error.message);
       // Fallback to initial products if DB fails (e.g. missing config)
       setProducts(INITIAL_PRODUCTS);
       setLoading(false);
@@ -67,29 +71,38 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const addProduct = async (product: Product) => {
+    console.log("Attempting to add product:", product.id);
     try {
       await setDoc(doc(db, "products", product.id), product);
-    } catch (e) {
+      console.log("Product added successfully");
+      alert("Category/Product saved successfully!");
+    } catch (e: any) {
       console.error("Error adding product: ", e);
-      alert("Failed to add product. Check console for details.");
+      alert("Failed to save: " + e.message);
     }
   };
 
   const updateProduct = async (updatedProduct: Product) => {
+    console.log("Attempting to update product:", updatedProduct.id);
     try {
       await setDoc(doc(db, "products", updatedProduct.id), updatedProduct);
-    } catch (e) {
+      console.log("Product updated successfully");
+      alert("Category/Product updated successfully!");
+    } catch (e: any) {
       console.error("Error updating product: ", e);
-      alert("Failed to update product. Check console for details.");
+      alert("Failed to update: " + e.message);
     }
   };
 
   const deleteProduct = async (id: string) => {
+    console.log("Attempting to delete product:", id);
     try {
       await deleteDoc(doc(db, "products", id));
-    } catch (e) {
+      console.log("Product deleted successfully");
+      alert("Category/Product deleted successfully!");
+    } catch (e: any) {
       console.error("Error deleting product: ", e);
-      alert("Failed to delete product. Check console for details.");
+      alert("Failed to delete: " + e.message);
     }
   };
 
