@@ -152,6 +152,16 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
                                             />
                                         </div>
 
+                                        <div className="flex justify-center">
+                                            {import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && (
+                                                <ReCAPTCHA
+                                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
+                                                    onChange={(token) => setCaptchaToken(token)}
+                                                    theme="dark"
+                                                />
+                                            )}
+                                        </div>
+
                                         <button
                                             type="submit"
                                             disabled={isLoading}
@@ -168,16 +178,6 @@ const Catalog: React.FC<CatalogProps> = ({ lang }) => {
                                                 </>
                                             )}
                                         </button>
-
-                                        <div className="flex justify-center mt-6">
-                                            {import.meta.env.VITE_RECAPTCHA_SITE_KEY && import.meta.env.VITE_RECAPTCHA_SITE_KEY !== 'your_recaptcha_site_key' && (
-                                                <ReCAPTCHA
-                                                    sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                                                    onChange={(token) => setCaptchaToken(token)}
-                                                    theme="dark"
-                                                />
-                                            )}
-                                        </div>
 
                                         <p className="text-center text-xs text-aavo-silver/50 mt-4">
                                             * Your information is secure and used only for verification.
