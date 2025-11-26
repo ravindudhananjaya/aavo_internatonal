@@ -209,19 +209,7 @@ const Contact: React.FC<ContactProps> = ({ lang }) => {
               </div>
             </div>
 
-            {/* Visual Placeholder for Map or Office Image */}
-            <div className="relative h-64 rounded-lg overflow-hidden border border-white/10 group">
-              <img
-                src="https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1000&auto=format&fit=crop"
-                alt="Office Location"
-                className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-              />
-              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-                <span className="bg-black/70 text-white px-4 py-2 rounded backdrop-blur-sm font-header text-sm border border-white/20">
-                  TOKYO HQ
-                </span>
-              </div>
-            </div>
+
           </motion.div>
 
           {/* Right Column: Form */}
