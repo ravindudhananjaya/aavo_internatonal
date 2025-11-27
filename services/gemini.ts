@@ -5,7 +5,10 @@ const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 let genAI: GoogleGenerativeAI | null = null;
 
 if (API_KEY) {
+    console.log("Gemini API Key loaded:", API_KEY.substring(0, 8) + "...");
     genAI = new GoogleGenerativeAI(API_KEY);
+} else {
+    console.error("Gemini API Key is MISSING in environment variables. Check .env file.");
 }
 
 export interface AnalyzedProductData {

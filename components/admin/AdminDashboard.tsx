@@ -111,10 +111,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       updatedSubProducts.push(currentSubProduct);
     }
 
-    // Sanitize to remove undefined values which Firestore hates in arrays
-    const sanitizedSubProducts = JSON.parse(JSON.stringify(updatedSubProducts));
+    // Sanitize the entire object to remove undefined values
+    // Also filter out any nulls from the array (which JSON.stringify might create for sparse arrays)
+    const productToUpdate = { ...selectedCategory, subProducts: updatedSubProducts };
+    const sanitizedProduct = JSON.parse(JSON.stringify(productToUpdate));
 
-    updateProduct({ ...selectedCategory, subProducts: sanitizedSubProducts });
+    if (Array.isArray(sanitizedProduct.subProducts)) {
+      sanitizedProduct.subProducts = sanitizedProduct.subProducts.filter((p: any) => p !== null);
+    }
+
+    console.log("Saving product:", sanitizedProduct);
+    updateProduct(sanitizedProduct);
     setViewMode('products');
   };
 
@@ -580,8 +587,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                       description: { en: data.description.en, jp: data.description.jp }
                     }));
                   }
-                } catch (error) {
-                  alert("Failed to analyze image. Please try again or check your API key.");
+                } catch (error: any) {
+                  console.error("Analysis failed:", error);
+                  alert(`Failed to analyze image: ${error.message || "Unknown error"}`);
                 } finally {
                   setIsAnalyzing(false);
                 }
