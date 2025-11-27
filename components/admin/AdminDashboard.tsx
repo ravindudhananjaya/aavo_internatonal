@@ -111,7 +111,10 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       updatedSubProducts.push(currentSubProduct);
     }
 
-    updateProduct({ ...selectedCategory, subProducts: updatedSubProducts });
+    // Sanitize to remove undefined values which Firestore hates in arrays
+    const sanitizedSubProducts = JSON.parse(JSON.stringify(updatedSubProducts));
+
+    updateProduct({ ...selectedCategory, subProducts: sanitizedSubProducts });
     setViewMode('products');
   };
 
