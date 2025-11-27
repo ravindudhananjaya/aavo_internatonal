@@ -108,7 +108,7 @@ const SingleProductDetail: React.FC<SingleProductDetailProps> = ({ lang, categor
                   {lang === 'en' ? 'About This Product' : 'この商品について'}
                 </h3>
                 <p className={`text-gray-300 leading-relaxed ${lang === 'jp' ? 'font-jp' : ''}`}>
-                  {category.description[lang]}
+                  {product.description?.[lang] || category.description[lang]}
                 </p>
               </div>
 

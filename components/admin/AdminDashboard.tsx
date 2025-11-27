@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useData } from '../../contexts/DataContext';
 import { Product, SubProduct } from '../../types';
-import { Plus, Edit, Trash2, Save, X, Link as LinkIcon, RefreshCw, LogOut, Package, ArrowLeft, Grid, Image as ImageIcon } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, X, Link as LinkIcon, RefreshCw, LogOut, Package, ArrowLeft, Grid, Image as ImageIcon, Sparkles, Loader2 } from 'lucide-react';
 import ImageUpload from './ImageUpload';
+import { analyzeProductImage } from '../../services/gemini';
 
 interface AdminDashboardProps {
   onLogout: () => void;
@@ -25,6 +26,7 @@ const emptyProduct: Product = {
 
 const emptySubProduct: SubProduct = {
   name: { en: '', jp: '' },
+  description: { en: '', jp: '' },
   image: ''
 };
 
@@ -36,6 +38,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const [editingSubProductIndex, setEditingSubProductIndex] = useState<number | null>(null);
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [tempCatalogUrl, setTempCatalogUrl] = useState(catalogUrl);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   // Get selected category
   const selectedCategory = products.find(p => p.id === selectedCategoryId);
@@ -155,33 +158,30 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
       <div className="space-y-2">
         <button
           onClick={() => setViewMode('categories')}
-          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
-            viewMode === 'categories' || viewMode === 'category-form'
-              ? 'bg-aavo-green text-white'
-              : 'hover:bg-gray-100 text-gray-700'
-          }`}
+          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${viewMode === 'categories' || viewMode === 'category-form'
+            ? 'bg-aavo-green text-white'
+            : 'hover:bg-gray-100 text-gray-700'
+            }`}
         >
           <Grid size={20} />
           Categories
         </button>
         <button
           onClick={() => setViewMode('catalog')}
-          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
-            viewMode === 'catalog'
-              ? 'bg-aavo-green text-white'
-              : 'hover:bg-gray-100 text-gray-700'
-          }`}
+          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${viewMode === 'catalog'
+            ? 'bg-aavo-green text-white'
+            : 'hover:bg-gray-100 text-gray-700'
+            }`}
         >
           <LinkIcon size={20} />
           Catalog Settings
         </button>
         <button
           onClick={() => setViewMode('logo')}
-          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${
-            viewMode === 'logo'
-              ? 'bg-aavo-green text-white'
-              : 'hover:bg-gray-100 text-gray-700'
-          }`}
+          className={`w-full text-left px-4 py-3 rounded-lg flex items-center gap-3 transition-colors ${viewMode === 'logo'
+            ? 'bg-aavo-green text-white'
+            : 'hover:bg-gray-100 text-gray-700'
+            }`}
         >
           <ImageIcon size={20} />
           Website Logo
@@ -524,6 +524,35 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
           </div>
         </div>
 
+        <div className="grid grid-cols-1 gap-4">
+          <div>
+            <label className="block text-sm font-bold mb-1">Product Description (EN)</label>
+            <textarea
+              rows={3}
+              className="w-full p-2 border rounded"
+              value={currentSubProduct.description?.en || ''}
+              onChange={e => setCurrentSubProduct(prev => ({
+                ...prev,
+                description: { ...(prev.description || { en: '', jp: '' }), en: e.target.value }
+              }))}
+              placeholder="Specific description for this product..."
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-bold mb-1">Product Description (JP)</label>
+            <textarea
+              rows={3}
+              className="w-full p-2 border rounded"
+              value={currentSubProduct.description?.jp || ''}
+              onChange={e => setCurrentSubProduct(prev => ({
+                ...prev,
+                description: { ...(prev.description || { en: '', jp: '' }), jp: e.target.value }
+              }))}
+              placeholder="この商品の具体的な説明..."
+            />
+          </div>
+        </div>
+
         <ImageUpload
           value={currentSubProduct.image}
           onChange={(url) => setCurrentSubProduct(prev => ({ ...prev, image: url }))}
@@ -531,6 +560,37 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
           sizeGuide={{ width: 600, height: 600, maxSize: '2MB' }}
           aspectRatio="1:1"
         />
+
+        {currentSubProduct.image && (
+          <div className="flex justify-end">
+            <button
+              type="button"
+              onClick={async () => {
+                if (!currentSubProduct.image) return;
+                setIsAnalyzing(true);
+                try {
+                  const data = await analyzeProductImage(currentSubProduct.image);
+                  if (data) {
+                    setCurrentSubProduct(prev => ({
+                      ...prev,
+                      name: { en: data.name.en, jp: data.name.jp },
+                      description: { en: data.description.en, jp: data.description.jp }
+                    }));
+                  }
+                } catch (error) {
+                  alert("Failed to analyze image. Please try again or check your API key.");
+                } finally {
+                  setIsAnalyzing(false);
+                }
+              }}
+              disabled={isAnalyzing}
+              className="flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 disabled:opacity-50 transition-colors"
+            >
+              {isAnalyzing ? <Loader2 size={18} className="animate-spin" /> : <Sparkles size={18} />}
+              {isAnalyzing ? 'Analyzing...' : 'Auto-Fill with AI'}
+            </button>
+          </div>
+        )}
 
         <div className="flex justify-end gap-4 pt-4 border-t">
           <button

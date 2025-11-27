@@ -134,6 +134,7 @@ export interface ContentStrings {
 
 export interface SubProduct {
   name: { en: string; jp: string };
+  description?: { en: string; jp: string };
   image: string;
   categoryName?: { en: string; jp: string }; // Optional for display purposes
 }
