@@ -40,6 +40,26 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
   const [tempCatalogUrl, setTempCatalogUrl] = useState(catalogUrl);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  // Ensure Gemini always receives a base64-encoded image, even if user provided a URL
+  const getImageAsBase64 = async (imageSource: string): Promise<string> => {
+    if (imageSource.startsWith('data:')) {
+      return imageSource;
+    }
+
+    const response = await fetch(imageSource);
+    if (!response.ok) {
+      throw new Error('Unable to fetch image from the provided URL');
+    }
+
+    const blob = await response.blob();
+    return await new Promise<string>((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve(reader.result as string);
+      reader.onerror = () => reject(new Error('Failed to read image data'));
+      reader.readAsDataURL(blob);
+    });
+  };
+
   // Get selected category
   const selectedCategory = products.find(p => p.id === selectedCategoryId);
 
@@ -579,7 +599,8 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
                 if (!currentSubProduct.image) return;
                 setIsAnalyzing(true);
                 try {
-                  const data = await analyzeProductImage(currentSubProduct.image);
+                  const base64Image = await getImageAsBase64(currentSubProduct.image);
+                  const data = await analyzeProductImage(base64Image);
                   if (data) {
                     setCurrentSubProduct(prev => ({
                       ...prev,
