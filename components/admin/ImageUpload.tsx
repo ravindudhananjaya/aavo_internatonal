@@ -1,5 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
+import { storage } from '../../firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
 interface ImageUploadProps {
   value: string;
@@ -17,7 +19,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   value,
   onChange,
   label,
-  sizeGuide = { width: 800, height: 600, maxSize: '2MB' },
+  sizeGuide = { width: 800, height: 600, maxSize: '5MB' },
   aspectRatio = '4:3'
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -40,30 +42,31 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       return;
     }
 
-    // Validate file size (max 2MB for localStorage)
-    const maxSizeBytes = 2 * 1024 * 1024; // 2MB
+    // Validate file size (max 5MB for Storage)
+    const maxSizeBytes = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSizeBytes) {
-      setError('Image size must be less than 2MB. Please compress the image or use a URL instead.');
+      setError('Image size must be less than 5MB.');
       setIsUploading(false);
       return;
     }
 
     try {
-      // Convert to base64
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const base64 = event.target?.result as string;
-        onChange(base64);
-        setIsUploading(false);
-        setUseUrl(false);
-      };
-      reader.onerror = () => {
-        setError('Failed to read file. Please try again.');
-        setIsUploading(false);
-      };
-      reader.readAsDataURL(file);
-    } catch {
-      setError('Failed to process image. Please try again.');
+      // Upload to Firebase Storage
+      const timestamp = Date.now();
+      // sanitize filename
+      const safeName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
+      const storagePath = `uploads/${timestamp}_${safeName}`;
+      const storageRef = ref(storage, storagePath);
+
+      await uploadBytes(storageRef, file);
+      const downloadURL = await getDownloadURL(storageRef);
+
+      onChange(downloadURL);
+      setIsUploading(false);
+      setUseUrl(false);
+    } catch (err: any) {
+      console.error("Upload failed:", err);
+      setError('Failed to upload image. Please try again. ' + (err.message || ''));
       setIsUploading(false);
     }
   };
@@ -108,18 +111,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         <button
           type="button"
           onClick={() => setUseUrl(true)}
-          className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-            useUrl ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
-          }`}
+          className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${useUrl ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
+            }`}
         >
           URL Link
         </button>
         <button
           type="button"
           onClick={() => setUseUrl(false)}
-          className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${
-            !useUrl ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
-          }`}
+          className={`flex-1 py-2 px-3 rounded text-sm font-medium transition-colors ${!useUrl ? 'bg-white shadow text-gray-900' : 'text-gray-500 hover:text-gray-700'
+            }`}
         >
           Upload File
         </button>
@@ -148,9 +149,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       ) : (
         /* File Upload */
         <div
-          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
-            isUploading ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
-          }`}
+          className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${isUploading ? 'border-blue-400 bg-blue-50' : 'border-gray-300 hover:border-blue-400 hover:bg-gray-50'
+            }`}
           onClick={() => fileInputRef.current?.click()}
         >
           <input

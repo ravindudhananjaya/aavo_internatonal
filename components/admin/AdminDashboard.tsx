@@ -695,7 +695,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
           value={logoUrl}
           onChange={(url) => updateLogoUrl(url)}
           label="Company Logo"
-          sizeGuide={{ width: 200, height: 60, maxSize: '500KB' }}
+          sizeGuide={{ width: 200, height: 60, maxSize: '2MB' }}
           aspectRatio="3:1"
         />
 
@@ -715,17 +715,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             <div>
               <p className="font-semibold text-gray-700">Logo</p>
               <p className="text-gray-500">200 x 60px</p>
-              <p className="text-xs text-gray-400">Ratio 3:1, Max 500KB</p>
+              <p className="text-xs text-gray-400">Ratio 3:1, Max 2MB</p>
             </div>
             <div>
               <p className="font-semibold text-gray-700">Category Image</p>
               <p className="text-gray-500">800 x 600px</p>
-              <p className="text-xs text-gray-400">Ratio 4:3, Max 2MB</p>
+              <p className="text-xs text-gray-400">Ratio 4:3, Max 5MB</p>
             </div>
             <div>
               <p className="font-semibold text-gray-700">Product Image</p>
               <p className="text-gray-500">600 x 600px</p>
-              <p className="text-xs text-gray-400">Ratio 1:1, Max 2MB</p>
+              <p className="text-xs text-gray-400">Ratio 1:1, Max 5MB</p>
             </div>
           </div>
           <div className="text-xs text-gray-500">
@@ -733,8 +733,9 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({ onLogout }) => {
             <ul className="list-disc list-inside space-y-1">
               <li>Use PNG format for logos with transparency</li>
               <li>Use JPG/WebP for product photos (smaller file size)</li>
-              <li>Compress images before uploading to save storage space</li>
-              <li>Images are stored in browser localStorage (limited to ~5MB total)</li>
+              <li>Use JPG/WebP for product photos (smaller file size)</li>
+              <li>Images are stored in Firebase Cloud Storage (max 5MB per image)</li>
+              <li>Use the URL option for images hosted elsewhere</li>
             </ul>
           </div>
         </div>
