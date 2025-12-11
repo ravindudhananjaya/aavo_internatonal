@@ -77,6 +77,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Helper to upload single string if base64
     const uploadIfBase64 = async (str: string, prefix: string): Promise<string> => {
+      if (str && str.length > 1000) console.log(`Checking potentially large string (${str.length} chars) for ${prefix}`);
+
       if (str && str.startsWith('data:image')) {
         console.log(`Migrating base64 image for ${prefix}...`);
         try {
@@ -87,8 +89,10 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const url = await getDownloadURL(storageRef);
           console.log("Migration successful:", url);
           return url;
-        } catch (e) {
+        } catch (e: any) {
           console.error("Failed to migrate image:", e);
+          const msg = e.response?.data?.error?.message || e.message || "Unknown error";
+          alert(`Image auto-migration failed: ${msg}. Check console for details.`);
           // Return original if failed, so we don't lose data (though save might still fail)
           return str;
         }
