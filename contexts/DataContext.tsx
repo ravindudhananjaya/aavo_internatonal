@@ -1,8 +1,9 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import { Product, DataContextType } from '../types';
 import { PRODUCTS as INITIAL_PRODUCTS } from '../constants';
-import { db } from '../firebase';
+import { db, storage } from '../firebase';
 import { collection, onSnapshot, doc, setDoc, updateDoc, deleteDoc, getDocs, writeBatch } from 'firebase/firestore';
+import { ref, uploadString, getDownloadURL } from 'firebase/storage';
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
 
@@ -70,10 +71,52 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Helper to upload base64 images to Storage
+  const processProductImages = async (product: Product): Promise<Product> => {
+    const processed = { ...product };
+
+    // Helper to upload single string if base64
+    const uploadIfBase64 = async (str: string, prefix: string): Promise<string> => {
+      if (str && str.startsWith('data:image')) {
+        console.log(`Migrating base64 image for ${prefix}...`);
+        try {
+          const timestamp = Date.now();
+          const storagePath = `uploads/${timestamp}_${prefix}_migrated`;
+          const storageRef = ref(storage, storagePath);
+          await uploadString(storageRef, str, 'data_url');
+          const url = await getDownloadURL(storageRef);
+          console.log("Migration successful:", url);
+          return url;
+        } catch (e) {
+          console.error("Failed to migrate image:", e);
+          // Return original if failed, so we don't lose data (though save might still fail)
+          return str;
+        }
+      }
+      return str;
+    };
+
+    // Process main image
+    processed.image = await uploadIfBase64(processed.image, `main_${processed.id}`);
+
+    // Process sub-products
+    if (processed.subProducts && processed.subProducts.length > 0) {
+      processed.subProducts = await Promise.all(
+        processed.subProducts.map(async (sub, idx) => ({
+          ...sub,
+          image: await uploadIfBase64(sub.image, `sub_${processed.id}_${idx}`)
+        }))
+      );
+    }
+
+    return processed;
+  };
+
   const addProduct = async (product: Product) => {
     console.log("Attempting to add product:", product.id);
     try {
-      await setDoc(doc(db, "products", product.id), product);
+      const processedProduct = await processProductImages(product);
+      await setDoc(doc(db, "products", product.id), processedProduct);
       console.log("Product added successfully");
       alert("Category/Product saved successfully!");
     } catch (e: any) {
@@ -85,7 +128,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const updateProduct = async (updatedProduct: Product) => {
     console.log("Attempting to update product:", updatedProduct.id);
     try {
-      await setDoc(doc(db, "products", updatedProduct.id), updatedProduct);
+      const processedProduct = await processProductImages(updatedProduct);
+      await setDoc(doc(db, "products", updatedProduct.id), processedProduct);
       console.log("Product updated successfully");
       alert("Category/Product updated successfully!");
     } catch (e: any) {
